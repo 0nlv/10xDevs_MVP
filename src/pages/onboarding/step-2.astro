@@ -1,0 +1,43 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import OnboardingLayout from '@/components/onboarding/OnboardingLayout.astro';
+import CostUploadForm from '@/components/onboarding/CostUploadForm';
+import { createClient } from '@/lib/supabase';
+
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/signin');
+}
+
+// Validate step-1 completion
+const revenueUploadId = Astro.url.searchParams.get('upload_id');
+if (!revenueUploadId) {
+  return Astro.redirect('/onboarding/step-1');
+}
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect('/onboarding/step-1');
+}
+
+const { data: revenueUpload } = await supabase
+  .from('uploads')
+  .select('*')
+  .eq('id', revenueUploadId)
+  .eq('user_id', user.id)
+  .eq('file_type', 'revenue')
+  .single();
+
+if (!revenueUpload) {
+  return Astro.redirect('/onboarding/step-1');
+}
+---
+
+<Layout title="Upload Cost Data - Onboarding">
+  <OnboardingLayout step={2} title="Upload Your Cost Data">
+    <p class="mb-6 text-white/80">
+      Teraz wgraj plik CSV z kosztami (wydatki, podwykonawcy, materiały).
+    </p>
+    <CostUploadForm revenueUploadId={revenueUploadId} client:load />
+  </OnboardingLayout>
+</Layout>

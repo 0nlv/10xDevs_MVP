@@ -795,14 +795,14 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [x] 2.1 OnboardingLayout component created (src/components/onboarding/OnboardingLayout.astro)
-- [x] 2.2 Revenue upload API endpoint created (src/pages/api/upload-revenue.ts)
-- [x] 2.3 RevenueUploadForm component created (src/components/onboarding/RevenueUploadForm.tsx)
-- [x] 2.4 Step-1 page created (src/pages/onboarding/step-1.astro)
-- [x] 2.5 Middleware updated with onboarding route protection (src/middleware.ts)
-- [x] 2.6 TypeScript compiles (npm run typecheck)
-- [x] 2.7 Linting passes (npm run lint)
-- [x] 2.8 Build succeeds (npm run build)
+- [x] 2.1 OnboardingLayout component created (src/components/onboarding/OnboardingLayout.astro) — d0f64a7
+- [x] 2.2 Revenue upload API endpoint created (src/pages/api/upload-revenue.ts) — d0f64a7
+- [x] 2.3 RevenueUploadForm component created (src/components/onboarding/RevenueUploadForm.tsx) — d0f64a7
+- [x] 2.4 Step-1 page created (src/pages/onboarding/step-1.astro) — d0f64a7
+- [x] 2.5 Middleware updated with onboarding route protection (src/middleware.ts) — d0f64a7
+- [x] 2.6 TypeScript compiles (npm run typecheck) — d0f64a7
+- [x] 2.7 Linting passes (npm run lint) — d0f64a7
+- [x] 2.8 Build succeeds (npm run build) — d0f64a7
 
 #### Manual
 
@@ -817,12 +817,12 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [ ] 3.1 Cost upload API endpoint created (src/pages/api/upload-cost.ts)
-- [ ] 3.2 CostUploadForm component created (src/components/onboarding/CostUploadForm.tsx)
-- [ ] 3.3 Step-2 page created with prerequisite validation (src/pages/onboarding/step-2.astro)
-- [ ] 3.4 TypeScript compiles (npm run typecheck)
-- [ ] 3.5 Linting passes (npm run lint)
-- [ ] 3.6 Build succeeds (npm run build)
+- [x] 3.1 Cost upload API endpoint created (src/pages/api/upload-cost.ts)
+- [x] 3.2 CostUploadForm component created (src/components/onboarding/CostUploadForm.tsx)
+- [x] 3.3 Step-2 page created with prerequisite validation (src/pages/onboarding/step-2.astro)
+- [x] 3.4 TypeScript compiles (npm run typecheck)
+- [x] 3.5 Linting passes (npm run lint)
+- [x] 3.6 Build succeeds (npm run build)
 
 #### Manual
 
