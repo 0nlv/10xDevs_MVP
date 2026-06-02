@@ -67,7 +67,6 @@ test.describe('Orphaned Cost Detection', () => {
     
     await page.getByRole('button', { name: /upload|submit/i }).click();
     await expect(page.getByText(/success|uploaded/i)).toBeVisible();
-    
     // Assert: Navigate to cost assignment page and verify orphaned cost is flagged
     await page.getByRole('link', { name: /cost.*assignment|assign.*cost/i }).click();
     
@@ -76,21 +75,25 @@ test.describe('Orphaned Cost Detection', () => {
     await expect(page.getByText(/orphan|unassigned|no.*match|unknown.*client/i)).toBeVisible();
     
     // Verify the correct client name is NOT automatically assumed
-    const orphanedCostRow = page.getByText(typoClientName).locator('..');
-    await expect(orphanedCostRow.getByText(correctClientName)).not.toBeVisible();
+    // (orphaned cost row should NOT contain the correct client name)
+    const orphanWarning = page.getByText(/orphan|unassigned/i);
+    await expect(orphanWarning).toBeVisible();
+    // Verify correct client is not auto-assigned in the same context
+    const orphanSection = page.locator('section, div, table').filter({ hasText: typoClientName });
+    await expect(orphanSection.getByText(correctClientName)).not.toBeVisible();
     
     // Cleanup: Delete test uploads
     await page.getByRole('link', { name: /uploads|history/i }).click();
     
-    // Delete revenue upload
-    const revenueRow = page.getByText(testId).first();
-    await revenueRow.locator('..').getByRole('button', { name: /delete/i }).click();
+    // Delete revenue upload - find delete button near testId text
+    await page.getByRole('row').filter({ hasText: testId }).first()
+      .getByRole('button', { name: /delete/i }).click();
     await page.getByRole('button', { name: /confirm.*delete/i }).click();
     await expect(page.getByText(/deleted|removed/i)).toBeVisible();
     
     // Delete cost upload
-    const costRow = page.getByText(testId).first();
-    await costRow.locator('..').getByRole('button', { name: /delete/i }).click();
+    await page.getByRole('row').filter({ hasText: testId }).first()
+      .getByRole('button', { name: /delete/i }).click();
     await page.getByRole('button', { name: /confirm.*delete/i }).click();
     await expect(page.getByText(/deleted|removed/i)).toBeVisible();
   });
@@ -141,8 +144,8 @@ test.describe('Orphaned Cost Detection', () => {
     // Cleanup: Delete test upload
     await page.getByRole('link', { name: /uploads|history/i }).click();
     
-    const uploadRow = page.getByText(testId).first();
-    await uploadRow.locator('..').getByRole('button', { name: /delete/i }).click();
+    await page.getByRole('row').filter({ hasText: testId }).first()
+      .getByRole('button', { name: /delete/i }).click();
     await page.getByRole('button', { name: /confirm.*delete/i }).click();
     await expect(page.getByText(/deleted|removed/i)).toBeVisible();
   });
