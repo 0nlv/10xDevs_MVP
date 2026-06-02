@@ -3,7 +3,7 @@ project: ProfitLeak
 version: 1
 status: draft
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 prd_version: 1
 main_goal: market-feedback
 top_blocker: time
@@ -27,9 +27,9 @@ Właściciele mikro i małych firm (2–20 osób) wiedzą że „coś jest nie t
 
 | ID | Change ID | Outcome (user can …) | Prerequisites | PRD refs | Status |
 |---|---|---|---|---|---|
-| F-01 | data-schema-migrations | (foundation) PostgreSQL schema for CSV uploads, clients, transactions, costs, mapping/assignment rules, calculated results | — | Data layer (baseline gap) | ready |
-| S-01 | onboarding-csv-upload | see value prop onboarding, upload revenue/cost CSVs, see preview of parsed data | F-01 | US-03, US-04, FR-003, FR-004, FR-005, FR-006 | proposed |
-| S-02 | column-mapping | map CSV columns to system fields (client, amount, date), preview and correct mapping | S-01 | US-05, FR-007, FR-008 | proposed |
+| F-01 | data-schema-migrations | (foundation) PostgreSQL schema for CSV uploads, clients, transactions, costs, mapping/assignment rules, calculated results | — | Data layer (baseline gap) | done |
+| S-01 | onboarding-csv-upload | see value prop onboarding, upload revenue/cost CSVs, see preview of parsed data | F-01 | US-03, US-04, FR-003, FR-004, FR-005, FR-006 | done |
+| S-02 | column-mapping | map CSV columns to system fields (client, amount, date), preview and correct mapping | S-01 | US-05, FR-007, FR-008 | ready |
 | S-03 | cost-assignment | define simple rules for assigning costs to clients, manually adjust assignments | S-02 | US-06, FR-009, FR-010 | proposed |
 | S-04 | margin-calculation | see calculated revenue, costs, and margin % per client in simple table | S-03 | US-07, FR-011, FR-012, FR-013, FR-014 | proposed |
 | S-05 | alerts-dashboard | see alerts for unprofitable clients + full dashboard (top/bottom clients, global margin, aha moment) | S-04 | US-08, US-09, US-10, FR-015, FR-016, FR-017, FR-018, FR-019, FR-020 | blocked |
@@ -144,9 +144,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 | Roadmap ID | Change ID | Suggested issue title | Ready for `/10x-plan` | Notes |
 |---|---|---|---|---|
-| F-01 | data-schema-migrations | Set up PostgreSQL schema for CSV data and margins | yes | Run `/10x-plan data-schema-migrations` |
-| S-01 | onboarding-csv-upload | Onboarding + CSV upload with preview | no | Depends on F-01; ready after F-01 done |
-| S-02 | column-mapping | Map CSV columns to system fields | no | Depends on S-01 |
+| F-01 | data-schema-migrations | Set up PostgreSQL schema for CSV data and margins | done | Completed 2026-06-02 |
+| S-01 | onboarding-csv-upload | Onboarding + CSV upload with preview | done | Completed 2026-06-02 |
+| S-02 | column-mapping | Map CSV columns to system fields | yes | Run `/10x-plan column-mapping` |
 | S-03 | cost-assignment | Define cost assignment rules | no | Depends on S-02 |
 | S-04 | margin-calculation | Calculate revenue, costs, margins per client | no | Depends on S-03 |
 | S-05 | alerts-dashboard | Alert detection + insights dashboard | no | Blocked: resolve alert threshold question |
@@ -166,4 +166,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when changes are archived.)
+- **F-01 (data-schema-migrations)** — Completed 2026-06-02. PostgreSQL schema deployed (uploads, clients, transactions, costs tables with RLS policies).
+- **S-01 (onboarding-csv-upload)** — Completed 2026-06-02. 3-step wizard (value prop → revenue upload → cost upload → confirmation), CSV parsing with papaparse, preview tables, deployed to Cloudflare Workers.

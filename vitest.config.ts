@@ -1,17 +1,11 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
-import { resolve } from 'path';
+import path from 'node:path';
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
   test: {
-    environment: 'happy-dom',
     globals: true,
-    include: ['**/*.test.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**', '**/.astro/**'],
-    timeout: 10000,
+    environment: 'node',
+    include: ['tests/**/*.test.ts'],
   },
 });

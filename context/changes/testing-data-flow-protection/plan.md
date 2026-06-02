@@ -428,46 +428,50 @@ From test-plan.md §1 Strategy: **Cost × signal drives coverage, not line perce
 
 #### Automated
 
-- [x] 1.1 Dependencies installed: `npm list vitest @vitest/ui happy-dom` shows all present
-- [x] 1.2 Config valid: `npx vitest --version` runs without error
-- [x] 1.3 Directory structure: `tests/unit/`, `tests/integration/`, `tests/utils/` exist
-- [x] 1.4 Utilities compile: `npx tsc --noEmit tests/utils/*.ts` passes
+- [x] 1.1 Dependencies installed: `npm list vitest @vitest/ui happy-dom` shows all present — 8e19750
+- [x] 1.2 Config valid: `npx vitest --version` runs without error — 8e19750
+- [x] 1.3 Directory structure: `tests/unit/`, `tests/integration/`, `tests/utils/` exist — 8e19750
+- [x] 1.4 Utilities compile: `npx tsc --noEmit tests/utils/*.ts` passes — 8e19750
 
 #### Manual
 
-- [x] 1.5 `npm run test` executes (exits with "no test files found")
-- [x] 1.6 `npm run test:ui` opens browser UI showing empty test suite
-- [x] 1.7 Mock utilities export expected functions
+- [x] 1.5 `npm run test` executes (exits with "no test files found") — 8e19750
+- [x] 1.6 `npm run test:ui` opens browser UI showing empty test suite — 8e19750
+- [x] 1.7 Mock utilities export expected functions — 8e19750
 
 ### Phase 2: Unit Tests for CSV Parser
 
+**⚠️ SKIPPED** — Blocked by Vite SSR + Vitest compatibility issue. See context/foundation/lessons.md #L001.
+
 #### Automated
 
-- [ ] 2.1 All unit tests pass: `npm run test tests/unit/`
-- [ ] 2.2 Coverage: `npx vitest --coverage` shows `csv-parser.ts` functions covered
-- [ ] 2.3 Type checking: `npx tsc --noEmit tests/unit/*.ts` passes
-- [ ] 2.4 Fast execution: Unit tests complete <500ms total
+- [~] 2.1 All unit tests pass: `npm run test tests/unit/` — SKIPPED
+- [~] 2.2 Coverage: `npx vitest --coverage` shows `csv-parser.ts` functions covered — SKIPPED
+- [~] 2.3 Type checking: `npx tsc --noEmit tests/unit/*.ts` passes — SKIPPED
+- [~] 2.4 Fast execution: Unit tests complete <500ms total — SKIPPED
 
 #### Manual
 
-- [ ] 2.5 Tests accurately document current behavior
-- [ ] 2.6 Test names clearly describe scenario
-- [ ] 2.7 Intentionally break csv-parser.ts logic → tests fail as expected
+- [~] 2.5 Tests accurately document current behavior — SKIPPED
+- [~] 2.6 Test names clearly describe scenario — SKIPPED
+- [~] 2.7 Intentionally break csv-parser.ts logic → tests fail as expected — SKIPPED
 
 ### Phase 3: Integration Tests for Upload Flow
 
+**⚠️ SKIPPED** — Blocked by Vite SSR + Vitest compatibility issue. See context/foundation/lessons.md #L001.
+
 #### Automated
 
-- [ ] 3.1 All integration tests pass: `npm run test tests/integration/`
-- [ ] 3.2 Coverage: API routes `src/pages/api/upload-revenue.ts`, `src/pages/api/upload-cost.ts` covered
-- [ ] 3.3 Type checking: `npx tsc --noEmit tests/integration/*.ts` passes
-- [ ] 3.4 Fast execution: Integration tests complete <5s total
-- [ ] 3.5 CI-ready: `CI=true npm run test` succeeds
+- [~] 3.1 All integration tests pass: `npm run test tests/integration/` — SKIPPED
+- [~] 3.2 Coverage: API routes `src/pages/api/upload-revenue.ts`, `src/pages/api/upload-cost.ts` covered — SKIPPED
+- [~] 3.3 Type checking: `npx tsc --noEmit tests/integration/*.ts` passes — SKIPPED
+- [~] 3.4 Fast execution: Integration tests complete <5s total — SKIPPED
+- [~] 3.5 CI-ready: `CI=true npm run test` succeeds — SKIPPED
 
 #### Manual
 
-- [ ] 3.6 Risk #1 test: Break findColumn() → test fails with clear error
-- [ ] 3.7 Risk #2 test: Remove vendor field → test fails (mock assertion catches)
-- [ ] 3.8 Risk #3 test: Remove validation → malformed CSV test fails (HTTP 200 instead of 400)
-- [ ] 3.9 Happy-path tests: Mock error response → tests fail appropriately
-- [ ] 3.10 Test output is readable: Failure messages clearly indicate which scenario broke
+- [~] 3.6 Risk #1 test: Break findColumn() → test fails with clear error — SKIPPED
+- [~] 3.7 Risk #2 test: Remove vendor field → test fails (mock assertion catches) — SKIPPED
+- [~] 3.8 Risk #3 test: Remove validation → malformed CSV test fails (HTTP 200 instead of 400) — SKIPPED
+- [~] 3.9 Happy-path tests: Mock error response → tests fail appropriately — SKIPPED
+- [~] 3.10 Test output is readable: Failure messages clearly indicate which scenario broke — SKIPPED
