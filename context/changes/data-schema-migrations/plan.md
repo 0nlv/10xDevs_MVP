@@ -19,6 +19,8 @@ created: 2026-06-01
 
 Each phase creates tables + indexes + user_id foreign key + 4 RLS policies (SELECT/INSERT/UPDATE/DELETE using `auth.uid()`).
 
+**Implementation note (as-built):** Original plan specified single migration file with phases appended incrementally. Actual implementation used 3 separate migration files (20260601000000, 20260601000001, 20260601000002) — one per phase. This approach aligns better with Supabase's incremental migration pattern and provides clearer phase separation. File contracts in phases below reflect original plan; actual files delivered are listed in verification.md.
+
 **PRD alignment:**
 - NFR: Deterministic results (materialized margins table ensures same input → same output)
 - NFR: Tenant isolation (RLS on every table per AGENTS.md "granular per-operation" rule)
