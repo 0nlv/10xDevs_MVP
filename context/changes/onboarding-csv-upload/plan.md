@@ -777,14 +777,14 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [x] 1.1 Dependencies installed (papaparse, zod, @types/papaparse)
-- [x] 1.2 shadcn/ui components added (card, input, label, table)
-- [x] 1.3 Upload validation utilities created (src/lib/upload-validation.ts)
-- [x] 1.4 CSV parsing utilities created (src/lib/csv-parser.ts)
-- [x] 1.5 FileUploadInput component created (src/components/onboarding/FileUploadInput.tsx)
-- [x] 1.6 CSVPreviewTable component created (src/components/onboarding/CSVPreviewTable.tsx)
-- [x] 1.7 TypeScript compiles (npm run typecheck)
-- [x] 1.8 Linting passes (npm run lint)
+- [x] 1.1 Dependencies installed (papaparse, zod, @types/papaparse) — a35b274
+- [x] 1.2 shadcn/ui components added (card, input, label, table) — a35b274
+- [x] 1.3 Upload validation utilities created (src/lib/upload-validation.ts) — a35b274
+- [x] 1.4 CSV parsing utilities created (src/lib/csv-parser.ts) — a35b274
+- [x] 1.5 FileUploadInput component created (src/components/onboarding/FileUploadInput.tsx) — a35b274
+- [x] 1.6 CSVPreviewTable component created (src/components/onboarding/CSVPreviewTable.tsx) — a35b274
+- [x] 1.7 TypeScript compiles (npm run typecheck) — a35b274
+- [x] 1.8 Linting passes (npm run lint) — a35b274
 
 #### Manual
 
@@ -795,14 +795,14 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [ ] 2.1 OnboardingLayout component created (src/components/onboarding/OnboardingLayout.astro)
-- [ ] 2.2 Revenue upload API endpoint created (src/pages/api/upload-revenue.ts)
-- [ ] 2.3 RevenueUploadForm component created (src/components/onboarding/RevenueUploadForm.tsx)
-- [ ] 2.4 Step-1 page created (src/pages/onboarding/step-1.astro)
-- [ ] 2.5 Middleware updated with onboarding route protection (src/middleware.ts)
-- [ ] 2.6 TypeScript compiles (npm run typecheck)
-- [ ] 2.7 Linting passes (npm run lint)
-- [ ] 2.8 Build succeeds (npm run build)
+- [x] 2.1 OnboardingLayout component created (src/components/onboarding/OnboardingLayout.astro)
+- [x] 2.2 Revenue upload API endpoint created (src/pages/api/upload-revenue.ts)
+- [x] 2.3 RevenueUploadForm component created (src/components/onboarding/RevenueUploadForm.tsx)
+- [x] 2.4 Step-1 page created (src/pages/onboarding/step-1.astro)
+- [x] 2.5 Middleware updated with onboarding route protection (src/middleware.ts)
+- [x] 2.6 TypeScript compiles (npm run typecheck)
+- [x] 2.7 Linting passes (npm run lint)
+- [x] 2.8 Build succeeds (npm run build)
 
 #### Manual
 

@@ -1,0 +1,36 @@
+---
+/**
+ * OnboardingLayout Component
+ * 
+ * Shared layout for all onboarding steps.
+ * Shows step indicator, applies glass-morphism card styling.
+ */
+
+interface Props {
+  step: 1 | 2 | 3;
+  title: string;
+}
+
+const { step, title } = Astro.props;
+---
+
+<div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
+  <div class="w-full max-w-2xl rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
+    <!-- Step indicator -->
+    <div class="mb-6 text-center">
+      <p class="text-sm text-white/60">
+        Step {step} of 3
+      </p>
+    </div>
+
+    <!-- Title -->
+    <h1
+      class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
+    >
+      {title}
+    </h1>
+
+    <!-- Content slot -->
+    <slot />
+  </div>
+</div>

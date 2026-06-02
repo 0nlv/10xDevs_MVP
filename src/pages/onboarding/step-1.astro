@@ -1,0 +1,20 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import OnboardingLayout from '@/components/onboarding/OnboardingLayout.astro';
+import RevenueUploadForm from '@/components/onboarding/RevenueUploadForm';
+
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/signin');
+}
+---
+
+<Layout title="Upload Revenue Data - Onboarding">
+  <OnboardingLayout step={1} title="Upload Your Revenue Data">
+    <p class="mb-6 text-white/80">
+      Wgraj plik CSV z fakturami sprzedaży, żeby zobaczyć które projekty/klienty 
+      są najbardziej rentowne.
+    </p>
+    <RevenueUploadForm client:load />
+  </OnboardingLayout>
+</Layout>
