@@ -21,6 +21,9 @@ CREATE INDEX idx_column_mappings_user_id ON column_mappings(user_id);
 CREATE INDEX idx_column_mappings_upload_id ON column_mappings(upload_id);
 
 -- cost_assignments: cost → client allocation rules
+-- Design note: Multiple assignments per cost_id are allowed (total may exceed 100%).
+-- Proportional/manual allocation is calculated at query time, not enforced at DB level.
+-- Application layer is responsible for validating total allocation if needed.
 CREATE TABLE cost_assignments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,

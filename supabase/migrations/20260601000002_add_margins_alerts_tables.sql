@@ -7,6 +7,9 @@
 -- ============================================================================
 
 -- margins: Materialized per-client margins
+-- Design note: margin_percentage returns 0 (not NULL) when revenue = 0.
+-- This is correct for financial reporting: clients with no revenue display as 0% margin,
+-- not as missing data. The CASE guard prevents division by zero.
 CREATE TABLE margins (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
