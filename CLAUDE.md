@@ -52,3 +52,15 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 ## CI
 
 GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+
+## E2E Testing Rules
+
+- Use getByRole, getByLabel, getByText as primary locators. Fall back to getByTestId only when accessibility attributes are ambiguous.
+- Never use CSS selectors, XPath, or DOM structure for locating elements.
+- Each test must be independently runnable — no shared state between tests.
+- Never use page.waitForTimeout(). Wait for specific conditions: toBeVisible(), waitForURL(), waitForResponse().
+- Assert the business outcome, not implementation details.
+- Use unique identifiers (e.g., timestamp suffix) for test data to avoid collisions in parallel runs. Clean up in test body or afterEach.
+- Use storageState for authentication — never log in through UI in individual tests.
+- Name tests after risks from context/foundation/test-plan.md.
+- Model all generated tests on e2e/seed.spec.ts conventions.
