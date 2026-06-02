@@ -1,0 +1,66 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import OnboardingLayout from '@/components/onboarding/OnboardingLayout.astro';
+import UploadSummary from '@/components/onboarding/UploadSummary';
+import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase';
+
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/signin');
+}
+
+// Validate both uploads exist
+const revenueId = Astro.url.searchParams.get('revenue_id');
+const costId = Astro.url.searchParams.get('cost_id');
+
+if (!revenueId || !costId) {
+  return Astro.redirect('/onboarding/step-1');
+}
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect('/onboarding/step-1');
+}
+
+const [{ data: revenueUpload }, { data: costUpload }] = await Promise.all([
+  supabase
+    .from('uploads')
+    .select('*')
+    .eq('id', revenueId)
+    .eq('user_id', user.id)
+    .eq('file_type', 'revenue')
+    .single(),
+  supabase
+    .from('uploads')
+    .select('*')
+    .eq('id', costId)
+    .eq('user_id', user.id)
+    .eq('file_type', 'cost')
+    .single(),
+]);
+
+if (!revenueUpload || !costUpload) {
+  return Astro.redirect('/onboarding/step-1');
+}
+---
+
+<Layout title="Onboarding Complete - Upload Summary">
+  <OnboardingLayout step={3} title="Data Upload Complete!">
+    <p class="mb-6 text-white/80">
+      Twoje dane zostały pomyślnie wgrane. Możesz teraz przejść do dashboardu.
+    </p>
+    
+    <UploadSummary 
+      revenueUpload={revenueUpload} 
+      costUpload={costUpload} 
+      client:load 
+    />
+
+    <div class="mt-8">
+      <Button asChild className="w-full">
+        <a href="/dashboard">Go to Dashboard</a>
+      </Button>
+    </div>
+  </OnboardingLayout>
+</Layout>

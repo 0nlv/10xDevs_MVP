@@ -817,12 +817,12 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [x] 3.1 Cost upload API endpoint created (src/pages/api/upload-cost.ts)
-- [x] 3.2 CostUploadForm component created (src/components/onboarding/CostUploadForm.tsx)
-- [x] 3.3 Step-2 page created with prerequisite validation (src/pages/onboarding/step-2.astro)
-- [x] 3.4 TypeScript compiles (npm run typecheck)
-- [x] 3.5 Linting passes (npm run lint)
-- [x] 3.6 Build succeeds (npm run build)
+- [x] 3.1 Cost upload API endpoint created (src/pages/api/upload-cost.ts) — 310dd21
+- [x] 3.2 CostUploadForm component created (src/components/onboarding/CostUploadForm.tsx) — 310dd21
+- [x] 3.3 Step-2 page created with prerequisite validation (src/pages/onboarding/step-2.astro) — 310dd21
+- [x] 3.4 TypeScript compiles (npm run typecheck) — 310dd21
+- [x] 3.5 Linting passes (npm run lint) — 310dd21
+- [x] 3.6 Build succeeds (npm run build) — 310dd21
 
 #### Manual
 
@@ -835,13 +835,13 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Automated
 
-- [ ] 4.1 UploadSummary component created (src/components/onboarding/UploadSummary.tsx)
-- [ ] 4.2 Step-3 page created with upload fetching (src/pages/onboarding/step-3.astro)
-- [ ] 4.3 Onboarding index redirect created (src/pages/onboarding/index.astro)
-- [ ] 4.4 Signup flow updated to redirect to onboarding (src/pages/api/auth/signup.ts)
-- [ ] 4.5 TypeScript compiles (npm run typecheck)
-- [ ] 4.6 Linting passes (npm run lint)
-- [ ] 4.7 Build succeeds (npm run build)
+- [x] 4.1 UploadSummary component created (src/components/onboarding/UploadSummary.tsx)
+- [x] 4.2 Step-3 page created with upload fetching (src/pages/onboarding/step-3.astro)
+- [x] 4.3 Onboarding index redirect created (src/pages/onboarding/index.astro)
+- [x] 4.4 Signup flow updated to redirect to onboarding (src/pages/auth/confirm-email.astro)
+- [x] 4.5 TypeScript compiles (npm run typecheck)
+- [x] 4.6 Linting passes (npm run lint)
+- [x] 4.7 Build succeeds (npm run build)
 
 #### Manual
 
