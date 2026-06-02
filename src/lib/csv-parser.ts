@@ -25,7 +25,6 @@ export async function parseCSV(csvContent: string): Promise<CSVParseResult> {
     Papa.parse<Record<string, string>>(csvContent, {
       header: true, // First row as headers
       skipEmptyLines: true, // Ignore blank rows
-      trimHeaders: true, // Clean column names
       transform: (value) => value.trim(), // Trim cell values
       complete: (results) => {
         const headers = results.meta.fields || [];
@@ -40,7 +39,7 @@ export async function parseCSV(csvContent: string): Promise<CSVParseResult> {
           preview,
         });
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(new Error(`CSV parsing failed: ${error.message}`));
       },
     });

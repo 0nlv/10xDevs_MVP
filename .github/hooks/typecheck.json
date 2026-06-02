@@ -1,0 +1,11 @@
+{
+  "name": "TypeScript Type Check",
+  "description": "Run TypeScript compiler to verify type safety after each edit",
+  "command": "npx tsc --noEmit",
+  "when": "afterEdit",
+  "exitCodes": {
+    "0": "success",
+    "2": "block"
+  },
+  "timeout": 60000
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ESLint Check",
+  "description": "Run ESLint after each file edit to catch code quality issues",
+  "command": "npm run lint",
+  "when": "afterEdit",
+  "exitCodes": {
+    "0": "success",
+    "2": "block"
+  },
+  "timeout": 30000
+}

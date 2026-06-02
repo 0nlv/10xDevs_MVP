@@ -87,7 +87,7 @@ export async function validateCSVStructure(
           rowCount,
         });
       },
-      error: (error) => {
+      error: (error: Error) => {
         resolve({
           valid: false,
           error: `Failed to parse CSV: ${error.message}`,

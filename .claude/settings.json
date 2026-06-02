@@ -25,5 +25,25 @@
     "deny": [
       "Bash(rm -rf *)"
     ]
+  },
+  "hooks": {
+    "afterEdit": [
+      {
+        "name": "ESLint Check",
+        "command": "npm run lint",
+        "exitCodeBehavior": {
+          "0": "continue",
+          "2": "block"
+        }
+      },
+      {
+        "name": "TypeScript Type Check",
+        "command": "npx tsc --noEmit",
+        "exitCodeBehavior": {
+          "0": "continue",
+          "2": "block"
+        }
+      }
+    ]
   }
 }
