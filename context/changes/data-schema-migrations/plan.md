@@ -197,37 +197,37 @@ Each phase creates tables + indexes + user_id foreign key + 4 RLS policies (SELE
 ## Progress
 
 Phase 1: Core data tables + RLS
-- [x] Create supabase/migrations/ directory
-- [x] Create migration file 20260601_create_profitleak_schema.sql
-- [x] Define uploads table with user_id FK
-- [x] Define clients table with unique constraint on (user_id, name)
-- [x] Define transactions table with upload_id and client_id FKs
-- [x] Define costs table with upload_id FK
-- [x] Enable RLS on uploads, clients, transactions, costs
-- [x] Create 16 RLS policies (4 per table)
-- [x] Add indexes on foreign keys
-- [x] Verify migration applies cleanly
-- [x] Verify 4 tables exist with RLS enabled
-- [x] Verify 16 policies created
+- [x] Create supabase/migrations/ directory — aa012f3
+- [x] Create migration file 20260601_create_profitleak_schema.sql — aa012f3
+- [x] Define uploads table with user_id FK — aa012f3
+- [x] Define clients table with unique constraint on (user_id, name) — aa012f3
+- [x] Define transactions table with upload_id and client_id FKs — aa012f3
+- [x] Define costs table with upload_id FK — aa012f3
+- [x] Enable RLS on uploads, clients, transactions, costs — aa012f3
+- [x] Create 16 RLS policies (4 per table) — aa012f3
+- [x] Add indexes on foreign keys — aa012f3
+- [x] Verify migration applies cleanly — aa012f3
+- [x] Verify 4 tables exist with RLS enabled — aa012f3
+- [x] Verify 16 policies created — aa012f3
 
 Phase 2: Mapping & assignment rules + RLS
-- [x] Define column_mappings table with upload_id FK
-- [x] Define cost_assignments table with cost_id and client_id FKs
-- [x] Enable RLS on column_mappings, cost_assignments
-- [x] Create 8 RLS policies (4 per table)
-- [x] Add indexes on foreign keys
-- [x] Verify migration applies cleanly
-- [x] Verify 6 tables total exist with RLS enabled
-- [x] Verify 24 policies total created
+- [x] Define column_mappings table with upload_id FK — aa012f3
+- [x] Define cost_assignments table with cost_id and client_id FKs — aa012f3
+- [x] Enable RLS on column_mappings, cost_assignments — aa012f3
+- [x] Create 8 RLS policies (4 per table) — aa012f3
+- [x] Add indexes on foreign keys — aa012f3
+- [x] Verify migration applies cleanly — aa012f3
+- [x] Verify 6 tables total exist with RLS enabled — aa012f3
+- [x] Verify 24 policies total created — aa012f3
 
 Phase 3: Calculated results + alerts + RLS
-- [x] Define margins table with generated columns (margin_amount, margin_percentage)
-- [x] Define alerts table with severity and alert_type enums
-- [x] Enable RLS on margins, alerts
-- [x] Create 8 RLS policies (4 per table)
-- [x] Add indexes on foreign keys and query columns
-- [x] Verify migration applies cleanly
-- [x] Verify all 8 tables exist with RLS enabled
-- [x] Verify 32 policies total created
-- [x] Run manual RLS isolation test (user A can't see user B's data)
-- [x] Document migration in context/changes/data-schema-migrations/verification.md
+- [x] Define margins table with generated columns (margin_amount, margin_percentage) — aa012f3
+- [x] Define alerts table with severity and alert_type enums — aa012f3
+- [x] Enable RLS on margins, alerts — aa012f3
+- [x] Create 8 RLS policies (4 per table) — aa012f3
+- [x] Add indexes on foreign keys and query columns — aa012f3
+- [x] Verify migration applies cleanly — aa012f3
+- [x] Verify all 8 tables exist with RLS enabled — aa012f3
+- [x] Verify 32 policies total created — aa012f3
+- [x] Run manual RLS isolation test (user A can't see user B's data) — aa012f3
+- [x] Document migration in context/changes/data-schema-migrations/verification.md — aa012f3

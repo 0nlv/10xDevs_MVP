@@ -2,9 +2,9 @@
 change_id: data-schema-migrations
 title: Data schema + migrations
 type: foundation
-status: implementing
+status: implemented
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 roadmap_id: F-01
 ---
 
