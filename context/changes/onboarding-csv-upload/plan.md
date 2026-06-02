@@ -788,8 +788,8 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Manual
 
-- [ ] 1.9 FileUploadInput component tested in isolation
-- [ ] 1.10 CSVPreviewTable component tested with mock data
+- [x] 1.9 FileUploadInput component tested in isolation
+- [x] 1.10 CSVPreviewTable component tested with mock data
 
 ### Phase 2: Step 1 — Value Prop + Revenue Upload
 
@@ -806,12 +806,12 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Manual
 
-- [ ] 2.9 Step-1 page loads with value prop and upload form
-- [ ] 2.10 Revenue CSV upload succeeds, preview displays correctly
-- [ ] 2.11 Database verified: uploads + clients + transactions tables populated
-- [ ] 2.12 Continue button redirects to step-2 with upload_id
-- [ ] 2.13 File size validation error tested (>10MB file)
-- [ ] 2.14 File type validation error tested (non-CSV file)
+- [x] 2.9 Step-1 page loads with value prop and upload form
+- [x] 2.10 Revenue CSV upload succeeds, preview displays correctly
+- [x] 2.11 Database verified: uploads + clients + transactions tables populated
+- [x] 2.12 Continue button redirects to step-2 with upload_id
+- [x] 2.13 File size validation error tested (>10MB file)
+- [x] 2.14 File type validation error tested (non-CSV file)
 
 ### Phase 3: Step 2 — Cost Upload
 
@@ -826,27 +826,27 @@ for (let i = 0; i < rows.length; i += 1000) {
 
 #### Manual
 
-- [ ] 3.7 Step-2 prerequisite check tested (redirect without upload_id)
-- [ ] 3.8 Cost CSV upload succeeds, preview displays correctly
-- [ ] 3.9 Database verified: costs table populated with correct upload_id
-- [ ] 3.10 Continue button redirects to step-3 with both upload IDs
+- [x] 3.7 Step-2 prerequisite check tested (redirect without upload_id)
+- [x] 3.8 Cost CSV upload succeeds, preview displays correctly
+- [x] 3.9 Database verified: costs table populated with correct upload_id
+- [x] 3.10 Continue button redirects to step-3 with both upload IDs
 
 ### Phase 4: Step 3 — Confirmation & Completion
 
 #### Automated
 
-- [x] 4.1 UploadSummary component created (src/components/onboarding/UploadSummary.tsx)
-- [x] 4.2 Step-3 page created with upload fetching (src/pages/onboarding/step-3.astro)
-- [x] 4.3 Onboarding index redirect created (src/pages/onboarding/index.astro)
-- [x] 4.4 Signup flow updated to redirect to onboarding (src/pages/auth/confirm-email.astro)
-- [x] 4.5 TypeScript compiles (npm run typecheck)
-- [x] 4.6 Linting passes (npm run lint)
-- [x] 4.7 Build succeeds (npm run build)
+- [x] 4.1 UploadSummary component created (src/components/onboarding/UploadSummary.tsx) — aee1e05
+- [x] 4.2 Step-3 page created with upload fetching (src/pages/onboarding/step-3.astro) — aee1e05
+- [x] 4.3 Onboarding index redirect created (src/pages/onboarding/index.astro) — aee1e05
+- [x] 4.4 Signup flow updated to redirect to onboarding (src/pages/auth/confirm-email.astro) — aee1e05
+- [x] 4.5 TypeScript compiles (npm run typecheck) — aee1e05
+- [x] 4.6 Linting passes (npm run lint) — aee1e05
+- [x] 4.7 Build succeeds (npm run build) — aee1e05
 
 #### Manual
 
-- [ ] 4.8 Step-3 displays both upload summaries correctly
-- [ ] 4.9 Dashboard button navigation tested
-- [ ] 4.10 New signup redirects to onboarding flow
-- [ ] 4.11 Full onboarding flow completed end-to-end
-- [ ] 4.12 Database state verified: all tables populated with RLS-protected data
+- [x] 4.8 Step-3 displays both upload summaries correctly
+- [x] 4.9 Dashboard button navigation tested
+- [x] 4.10 New signup redirects to onboarding flow
+- [x] 4.11 Full onboarding flow completed end-to-end
+- [x] 4.12 Database state verified: all tables populated with RLS-protected data

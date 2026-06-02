@@ -2,7 +2,7 @@
 change_id: onboarding-csv-upload
 title: Onboarding + CSV upload with preview
 type: feature
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 roadmap_id: S-01
