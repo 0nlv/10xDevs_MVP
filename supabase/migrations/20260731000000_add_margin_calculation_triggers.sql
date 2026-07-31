@@ -32,18 +32,28 @@ BEGIN
   FROM costs
   WHERE user_id = p_user_id;
 
-  -- Recalculate margins from transactions using proportional allocation
-  -- Note: cost_assignments are for future manual overrides but aren't used in initial calculation
+  -- Recalculate margins from transactions
+  -- Uses direct cost_assignments if available (allocation_type = 'direct'), otherwise proportional allocation
   INSERT INTO margins (user_id, client_id, revenue, costs)
   SELECT 
     t.user_id,
     t.client_id,
     COALESCE(SUM(t.amount), 0) as total_revenue,
-    CASE 
-      WHEN v_total_revenue > 0 AND COALESCE(SUM(t.amount), 0) > 0
-        THEN (COALESCE(SUM(t.amount), 0) / v_total_revenue) * v_total_costs
-      ELSE 0
-    END as allocated_costs
+    COALESCE(
+      -- Try to get direct cost assignments for this client
+      (SELECT SUM(c.amount)
+       FROM costs c
+       JOIN cost_assignments ca ON ca.cost_id = c.id
+       WHERE c.user_id = t.user_id
+         AND ca.client_id = t.client_id
+         AND ca.allocation_type = 'direct'),
+      -- Fallback to proportional allocation if no direct assignments exist
+      CASE 
+        WHEN v_total_revenue > 0 AND COALESCE(SUM(t.amount), 0) > 0
+          THEN (COALESCE(SUM(t.amount), 0) / v_total_revenue) * v_total_costs
+        ELSE 0
+      END
+    ) as allocated_costs
   FROM transactions t
   WHERE t.user_id = p_user_id
   GROUP BY t.user_id, t.client_id
