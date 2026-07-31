@@ -98,6 +98,7 @@ export const POST: APIRoute = async (context) => {
     const categoryColumn = findColumn(headers, ['category', 'type', 'kategoria']);
     const amountColumn = findColumn(headers, ['amount', 'cost', 'price', 'kwota']);
     const dateColumn = findColumn(headers, ['date', 'cost_date', 'invoice_date', 'data']);
+    const clientColumn = findColumn(headers, ['client', 'customer', 'klient']);
 
     const costs = rows.map((row) => {
       const vendor = vendorColumn ? row[vendorColumn]?.trim() : null;
@@ -106,8 +107,18 @@ export const POST: APIRoute = async (context) => {
         ? parseFloat(row[amountColumn]?.replace(/[^0-9.-]/g, '') || '0')
         : 0;
       const costDate = dateColumn ? row[dateColumn] : new Date().toISOString().split('T')[0];
+      const clientName = clientColumn ? row[clientColumn]?.trim() : null;
 
       return {
+        user_id: user.id,
+        upload_id: upload.id,
+        vendor,
+        category,
+        amount,
+        cost_date: costDate,
+        raw_data: { ...row, _clientName: clientName }, // Store client name for later matching
+      };
+    });
         user_id: user.id,
         upload_id: upload.id,
         vendor,
@@ -143,53 +154,84 @@ export const POST: APIRoute = async (context) => {
       }
     }
 
-    // MANUAL margin calculation - don't rely on triggers (RLS issues)
-    // Get total revenue and costs for proportional allocation
-    const { data: totalRevenueData } = await supabase
-      .from('transactions')
-      .select('sum(amount)')
-      .eq('user_id', user.id);
+    // 8. Create cost_assignments to map costs to clients
+    if (costsInserted > 0) {
+      console.log('DEBUG: Creating cost assignments');
+      
+      // Get all newly inserted costs with client names
+      const { data: insertedCosts, error: fetchError } = await supabase
+        .from('costs')
+        .select('id, raw_data')
+        .eq('upload_id', upload.id);
 
-    const { data: totalCostsData } = await supabase
-      .from('costs')
-      .select('sum(amount)')
-      .eq('user_id', user.id);
+      if (fetchError || !insertedCosts) {
+        console.error('Failed to fetch inserted costs:', fetchError);
+      } else {
+        // Extract client names and find matching clients
+        const clientNames = new Set(
+          insertedCosts
+            .map((c: any) => c.raw_data?._clientName)
+            .filter(Boolean)
+        );
 
-    const totalRevenue = totalRevenueData?.[0]?.sum || 0;
-    const totalCosts = totalCostsData?.[0]?.sum || 0;
+        // Get all clients for this user
+        const { data: allClients, error: clientError } = await supabase
+          .from('clients')
+          .select('id, name')
+          .eq('user_id', user.id);
 
-    // Calculate margins for each client
-    if (totalRevenue > 0 && costsInserted > 0) {
-      const { data: clientTransactions } = await supabase
-        .from('transactions')
-        .select('client_id, sum(amount)')
-        .eq('user_id', user.id)
-        .group_by('client_id');
+        if (clientError || !allClients) {
+          console.error('Failed to fetch clients:', clientError);
+        } else {
+          // Create client name → id map
+          const clientMap: Record<string, string> = {};
+          allClients.forEach((c: any) => {
+            clientMap[c.name.toLowerCase()] = c.id;
+          });
 
-      if (clientTransactions && clientTransactions.length > 0) {
-        const marginRecords = clientTransactions.map((ct: any) => {
-          const clientRevenue = ct.sum || 0;
-          const allocatedCosts = (clientRevenue / totalRevenue) * totalCosts;
-          return {
-            user_id: user.id,
-            client_id: ct.client_id,
-            revenue: clientRevenue,
-            costs: allocatedCosts,
-            calculated_at: new Date().toISOString(),
-          };
-        });
+          // Create cost_assignments for each cost
+          const assignments = insertedCosts
+            .map((c: any) => {
+              const clientName = c.raw_data?._clientName;
+              if (!clientName) return null;
 
-        const { error: marginError } = await supabase
-          .from('margins')
-          .upsert(marginRecords, { onConflict: 'user_id,client_id' });
+              const clientId = clientMap[clientName.toLowerCase()];
+              if (!clientId) return null;
 
-        if (marginError) {
-          console.error('Margin calculation error:', marginError);
+              return {
+                user_id: user.id,
+                cost_id: c.id,
+                client_id: clientId,
+                allocation_type: 'direct',
+                allocation_percentage: 100,
+              };
+            })
+            .filter(Boolean);
+
+          if (assignments.length > 0) {
+            console.log('DEBUG: Inserting assignments', { count: assignments.length });
+            const { error: assignError } = await supabase
+              .from('cost_assignments')
+              .insert(assignments);
+
+            if (assignError) {
+              console.error('Assignment insert error:', assignError);
+            } else {
+              console.log('DEBUG: Assignments created successfully');
+            }
+          }
         }
       }
+
+      // Recalculate margins using SQL
+      console.log('DEBUG: Recalculating margins');
+      const { error: sqlError } = await supabase.rpc('recalculate_user_margins', {
+        p_user_id: user.id,
+      });
+      if (sqlError) console.error('Margin calculation error:', sqlError);
     }
 
-    // 8. Return success with upload_id and preview
+    // 9. Return success with upload_id and preview
     return new Response(
       JSON.stringify({
         success: true,
