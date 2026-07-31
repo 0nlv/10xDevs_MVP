@@ -119,15 +119,6 @@ export const POST: APIRoute = async (context) => {
         raw_data: { ...row, _clientName: clientName }, // Store client name for later matching
       };
     });
-        user_id: user.id,
-        upload_id: upload.id,
-        vendor,
-        category,
-        amount,
-        cost_date: costDate,
-        raw_data: row,
-      };
-    });
 
     // Insert in batches of 1000
     const batchSize = 1000;
