@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run build:routes",
+    "build:routes": "node -e \"import fs from 'fs'; fs.writeFileSync('dist/client/_routes.json', JSON.stringify({version:1,include:['/*'],exclude:['/_astro/*','/favicon.png','/*.png']},null,2))\"",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",

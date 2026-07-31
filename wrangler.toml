@@ -1,7 +1,11 @@
 name = "10x-astro-starter"
-main = "dist/server/index.js"
+main = "dist/server/entry.mjs"
 compatibility_date = "2026-05-08"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist/client"
+
+[env.production]
+routes = [{ pattern = "/*", zone_name = "profitleak.pages.dev" }]
 
 [observability]
 enabled = true
