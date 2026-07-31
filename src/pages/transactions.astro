@@ -1,0 +1,84 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import TransactionsManager from '@/components/transactions/TransactionsManager';
+import { createClient } from '@/lib/supabase';
+
+const { user } = Astro.locals;
+
+// Redirect if not authenticated
+if (!user) {
+  return Astro.redirect('/auth/signin');
+}
+
+// Fetch user's transactions with client names
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+const { data: transactions, error: transactionsError } = await supabase
+  .from('transactions')
+  .select(`
+    id,
+    client_id,
+    amount,
+    transaction_date,
+    clients (
+      name
+    )
+  `)
+  .order('transaction_date', { ascending: false })
+  .limit(100);
+
+const { data: clients, error: clientsError } = await supabase
+  .from('clients')
+  .select('id, name')
+  .order('name');
+
+if (transactionsError) {
+  console.error('Failed to fetch transactions:', transactionsError);
+}
+
+if (clientsError) {
+  console.error('Failed to fetch clients:', clientsError);
+}
+
+// Transform transactions data
+const transactionsData = (transactions || []).map((t) => ({
+  id: t.id,
+  client_id: t.client_id,
+  amount: t.amount,
+  transaction_date: t.transaction_date,
+  client_name: t.clients?.name,
+}));
+
+const clientsData = clients || [];
+---
+
+<Layout title="Transakcje">
+  <div class="min-h-screen bg-cosmic p-4">
+    <div class="mx-auto max-w-6xl py-8">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h1
+            class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent"
+          >
+            Transakcje
+          </h1>
+          <p class="text-blue-100/80">
+            Przeglądaj i edytuj transakcje przychodowe
+          </p>
+        </div>
+        <a
+          href="/dashboard"
+          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+        >
+          ← Powrót do Dashboard
+        </a>
+      </div>
+
+      <TransactionsManager
+        initialTransactions={transactionsData}
+        clients={clientsData}
+        client:load
+      />
+    </div>
+  </div>
+</Layout>

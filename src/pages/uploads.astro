@@ -1,0 +1,52 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import UploadsManager from '@/components/uploads/UploadsManager';
+import { createClient } from '@/lib/supabase';
+
+const { user } = Astro.locals;
+
+// Redirect if not authenticated
+if (!user) {
+  return Astro.redirect('/auth/signin');
+}
+
+// Fetch user's uploads
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const { data: uploads, error } = await supabase
+  .from('uploads')
+  .select('id, file_type, filename, row_count, uploaded_at')
+  .order('uploaded_at', { ascending: false });
+
+if (error) {
+  console.error('Failed to fetch uploads:', error);
+}
+
+const uploadsData = uploads || [];
+---
+
+<Layout title="Zarządzanie danymi">
+  <div class="min-h-screen bg-cosmic p-4">
+    <div class="mx-auto max-w-6xl py-8">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h1
+            class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent"
+          >
+            Zarządzanie danymi
+          </h1>
+          <p class="text-blue-100/80">
+            Przeglądaj i zarządzaj wgranymi plikami CSV
+          </p>
+        </div>
+        <a
+          href="/dashboard"
+          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+        >
+          ← Powrót do Dashboard
+        </a>
+      </div>
+
+      <UploadsManager initialUploads={uploadsData} client:load />
+    </div>
+  </div>
+</Layout>
