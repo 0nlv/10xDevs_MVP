@@ -1,9 +1,12 @@
--- Margin Calculation & Alert Generation Triggers
+-- ProfitLeak Schema Hotfix
 -- Created: 2026-07-31
--- Purpose: Automatically populate margins and alerts tables when transactions/costs change
+-- Purpose: Fix RLS issues in margin calculation functions by adding SECURITY DEFINER
+
+-- Drop and recreate functions with SECURITY DEFINER to bypass RLS checks when called from triggers
+-- Triggers execute in database context without auth.uid() session, causing RLS failures
 
 -- ============================================================================
--- Function: Recalculate margins for a specific user
+-- Function: Recalculate margins for a specific user (FIXED - SECURITY DEFINER)
 -- ============================================================================
 
 CREATE OR REPLACE FUNCTION recalculate_user_margins(p_user_id uuid)
@@ -32,8 +35,7 @@ BEGIN
   FROM costs
   WHERE user_id = p_user_id;
 
-  -- Recalculate margins from transactions using proportional allocation
-  -- Note: cost_assignments are for future manual overrides but aren't used in initial calculation
+  -- Recalculate margins - use proportional allocation (cost_assignments is always empty on upload)
   INSERT INTO margins (user_id, client_id, revenue, costs)
   SELECT 
     t.user_id,
@@ -53,10 +55,10 @@ BEGIN
     costs = EXCLUDED.costs,
     calculated_at = now();
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- ============================================================================
--- Function: Generate alerts based on margins
+-- Function: Generate alerts based on margins (FIXED - SECURITY DEFINER)
 -- ============================================================================
 
 CREATE OR REPLACE FUNCTION generate_margin_alerts(p_user_id uuid, p_profitability_threshold numeric DEFAULT 10)
@@ -100,44 +102,13 @@ BEGIN
   FROM margins m
   JOIN clients c ON c.id = m.client_id
   WHERE m.user_id = p_user_id
-    AND m.margin_amount < 0;
+    AND m.costs > m.revenue
+    AND m.revenue > 0;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- ============================================================================
--- Trigger: Recalculate margins when transactions change
--- ============================================================================
-
-CREATE OR REPLACE FUNCTION trigger_recalculate_margins_on_transaction()
-RETURNS TRIGGER AS $$
-BEGIN
-  PERFORM recalculate_user_margins(NEW.user_id);
-  PERFORM generate_margin_alerts(NEW.user_id);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_transaction_insert ON transactions;
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_transaction_update ON transactions;
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_transaction_delete ON transactions;
-
-CREATE TRIGGER trg_recalculate_margins_on_transaction_insert
-AFTER INSERT ON transactions
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_transaction();
-
-CREATE TRIGGER trg_recalculate_margins_on_transaction_update
-AFTER UPDATE ON transactions
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_transaction();
-
-CREATE TRIGGER trg_recalculate_margins_on_transaction_delete
-AFTER DELETE ON transactions
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_transaction();
-
--- ============================================================================
--- Trigger: Recalculate margins when costs/assignments change
+-- Trigger Functions (FIXED - SECURITY DEFINER)
 -- ============================================================================
 
 CREATE OR REPLACE FUNCTION trigger_recalculate_margins_on_cost()
@@ -151,29 +122,6 @@ BEGIN
   RETURN NEW;
 END;
 $$;
-
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_cost_insert ON costs;
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_cost_update ON costs;
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_cost_delete ON costs;
-
-CREATE TRIGGER trg_recalculate_margins_on_cost_insert
-AFTER INSERT ON costs
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_cost();
-
-CREATE TRIGGER trg_recalculate_margins_on_cost_update
-AFTER UPDATE ON costs
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_cost();
-
-CREATE TRIGGER trg_recalculate_margins_on_cost_delete
-AFTER DELETE ON costs
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_cost();
-
--- ============================================================================
--- Trigger: Recalculate when cost assignments change
--- ============================================================================
 
 CREATE OR REPLACE FUNCTION trigger_recalculate_margins_on_assignment()
 RETURNS TRIGGER 
@@ -191,10 +139,3 @@ BEGIN
   RETURN NEW;
 END;
 $$;
-
-DROP TRIGGER IF EXISTS trg_recalculate_margins_on_assignment_change ON cost_assignments;
-
-CREATE TRIGGER trg_recalculate_margins_on_assignment_change
-AFTER INSERT OR UPDATE OR DELETE ON cost_assignments
-FOR EACH ROW
-EXECUTE FUNCTION trigger_recalculate_margins_on_assignment();

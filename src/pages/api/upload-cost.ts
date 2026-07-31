@@ -129,19 +129,63 @@ export const POST: APIRoute = async (context) => {
       const batch = costs.slice(i, i + batchSize);
       console.log('DEBUG: Batch insert', { batch_size: batch.length, batch_index: i });
       
-      const { error: costError, data: costData, status, statusText } = await supabase
+      const { error: costError } = await supabase
         .from('costs')
-        .insert(batch)
-        .select();
+        .insert(batch);
 
-      console.log('DEBUG: Batch result', { costError, status, statusText, inserted_count: costData?.length });
+      console.log('DEBUG: Batch result', { costError });
 
       if (costError) {
         console.error('Cost insert error:', costError);
         costsError = costError.message;
-        // Continue with next batch - partial success is acceptable
       } else {
         costsInserted += batch.length;
+      }
+    }
+
+    // MANUAL margin calculation - don't rely on triggers (RLS issues)
+    // Get total revenue and costs for proportional allocation
+    const { data: totalRevenueData } = await supabase
+      .from('transactions')
+      .select('sum(amount)')
+      .eq('user_id', user.id);
+
+    const { data: totalCostsData } = await supabase
+      .from('costs')
+      .select('sum(amount)')
+      .eq('user_id', user.id);
+
+    const totalRevenue = totalRevenueData?.[0]?.sum || 0;
+    const totalCosts = totalCostsData?.[0]?.sum || 0;
+
+    // Calculate margins for each client
+    if (totalRevenue > 0 && costsInserted > 0) {
+      const { data: clientTransactions } = await supabase
+        .from('transactions')
+        .select('client_id, sum(amount)')
+        .eq('user_id', user.id)
+        .group_by('client_id');
+
+      if (clientTransactions && clientTransactions.length > 0) {
+        const marginRecords = clientTransactions.map((ct: any) => {
+          const clientRevenue = ct.sum || 0;
+          const allocatedCosts = (clientRevenue / totalRevenue) * totalCosts;
+          return {
+            user_id: user.id,
+            client_id: ct.client_id,
+            revenue: clientRevenue,
+            costs: allocatedCosts,
+            calculated_at: new Date().toISOString(),
+          };
+        });
+
+        const { error: marginError } = await supabase
+          .from('margins')
+          .upsert(marginRecords, { onConflict: 'user_id,client_id' });
+
+        if (marginError) {
+          console.error('Margin calculation error:', marginError);
+        }
       }
     }
 

@@ -1,0 +1,30 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build and Deploy",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Build Project",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"node_modules/.bin/astro",
+				"build"
+			]
+		},
+		{
+			"label": "Build with CMD",
+			"type": "shell",
+			"command": "C:\\Windows\\System32\\cmd.exe /c cd /d \"c:\\Users\\LB70XE\\OneDrive - ING\\Desktop\\10xDevs_MVP\" && npm run build",
+			"args": []
+		}
+	]
+}
