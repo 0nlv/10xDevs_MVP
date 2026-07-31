@@ -8,7 +8,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server",
+  output: "hybrid",
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
