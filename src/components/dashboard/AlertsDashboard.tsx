@@ -280,12 +280,14 @@ export default function AlertsDashboard() {
       <div className="rounded-lg border border-purple-500/50 bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-6 backdrop-blur">
         <h3 className="mb-2 text-lg font-bold text-purple-100">💡 Kluczowy Wgląd</h3>
         <p className="text-purple-100/80">
-          {data.alerts.length > 0
-            ? `Znaleźliśmy ${data.alerts.length} alertów wymagających Twojej uwagi. Klienci z marżą poniżej progu mogą znacząco obniżać Twoją rentowność.`
-            : 'Gratulacje! Wszystkie Twoje klienty są rentowni. Kontynuuj monitorowanie aby utrzymać zdrową marżę.'}
+          {data.bottomClients && data.bottomClients.length > 0
+            ? `Znaleźliśmy ${data.bottomClients.length} klientów poniżej progu rentowności (< 50% marża). Mogą oni znacząco obniżać Twoją rentowność.`
+            : 'Gratulacje! Wszystkie Twoje klienty są rentowne. Kontynuuj monitorowanie aby utrzymać zdrową marżę.'}
         </p>
         <p className="text-sm text-purple-100/60 mt-3">
-          Polecenie: Przeanalizuj klientów nierentownych i rozważ podniesienie cen lub zmianę warunków umowy.
+          {data.bottomClients && data.bottomClients.length > 0 
+            ? 'Rekomendacja: Przeanalizuj klientów nierentownych i rozważ podniesienie cen lub zmianę warunków umowy.'
+            : ''}
         </p>
       </div>
 
