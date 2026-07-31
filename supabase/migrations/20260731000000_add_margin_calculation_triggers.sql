@@ -8,20 +8,44 @@
 
 CREATE OR REPLACE FUNCTION recalculate_user_margins(p_user_id uuid)
 RETURNS void AS $$
+DECLARE
+  v_total_revenue numeric := 0;
+  v_total_costs numeric := 0;
 BEGIN
   -- Clear old margins
   DELETE FROM margins WHERE user_id = p_user_id;
 
-  -- Recalculate margins from transactions and costs
+  -- Calculate total revenue and costs for user
+  SELECT 
+    COALESCE(SUM(amount), 0),
+    COALESCE(SUM(CASE WHEN file_type = 'cost' THEN amount ELSE 0 END), 0)
+  INTO v_total_revenue, v_total_costs
+  FROM transactions t
+  JOIN uploads u ON u.id = t.upload_id
+  WHERE t.user_id = p_user_id
+    AND u.file_type = 'revenue';
+
+  SELECT COALESCE(SUM(amount), 0) INTO v_total_costs
+  FROM costs
+  WHERE user_id = p_user_id;
+
+  -- Recalculate margins from transactions, using cost_assignments if available, else proportional allocation
   INSERT INTO margins (user_id, client_id, revenue, costs)
   SELECT 
     t.user_id,
     t.client_id,
-    COALESCE(SUM(CASE WHEN t.client_id IS NOT NULL THEN t.amount ELSE 0 END), 0) as total_revenue,
-    COALESCE(SUM(CASE WHEN ca.client_id = t.client_id THEN c.amount ELSE 0 END), 0) as total_costs
+    COALESCE(SUM(t.amount), 0) as total_revenue,
+    COALESCE(
+      -- First: try to get manually assigned costs for this client
+      (SELECT SUM(ca.amount) FROM cost_assignments ca WHERE ca.client_id = t.client_id AND ca.cost_id IN (SELECT id FROM costs WHERE user_id = p_user_id)),
+      -- Fallback: proportional allocation if no assignments exist
+      CASE 
+        WHEN v_total_revenue > 0 AND COALESCE(SUM(t.amount), 0) > 0
+          THEN (COALESCE(SUM(t.amount), 0) / v_total_revenue) * v_total_costs
+        ELSE 0
+      END
+    ) as allocated_costs
   FROM transactions t
-  LEFT JOIN costs c ON c.user_id = t.user_id
-  LEFT JOIN cost_assignments ca ON ca.cost_id = c.id
   WHERE t.user_id = p_user_id
   GROUP BY t.user_id, t.client_id
   ON CONFLICT (user_id, client_id) 

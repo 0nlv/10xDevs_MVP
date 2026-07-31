@@ -87,10 +87,11 @@ export const GET: APIRoute = async (context) => {
       console.error('Alerts fetch error:', alertsError);
     }
 
-    // 4. Fetch top clients (highest margin %)
+    // 4. Fetch top clients (margin >= 50% - profitable)
     const { data: topClients, error: topError } = await supabase
       .from('margins')
       .select('id, client_id, revenue, costs, margin_amount, margin_percentage, clients (name)')
+      .gte('margin_percentage', 50) // Only profitable clients
       .gt('revenue', 0) // Only clients with revenue
       .order('margin_percentage', { ascending: false })
       .limit(5);
@@ -99,10 +100,11 @@ export const GET: APIRoute = async (context) => {
       console.error('Top clients fetch error:', topError);
     }
 
-    // 5. Fetch bottom clients (lowest margin %)
+    // 5. Fetch bottom clients (margin < 50% - unprofitable)
     const { data: bottomClients, error: bottomError } = await supabase
       .from('margins')
       .select('id, client_id, revenue, costs, margin_amount, margin_percentage, clients (name)')
+      .lt('margin_percentage', 50) // Only unprofitable clients
       .gt('revenue', 0) // Only clients with revenue
       .order('margin_percentage', { ascending: true })
       .limit(5);

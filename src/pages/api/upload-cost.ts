@@ -93,8 +93,7 @@ export const POST: APIRoute = async (context) => {
       );
     }
 
-    // 7. Bulk insert costs
-    // Find relevant columns
+    // 7. Find relevant columns
     const vendorColumn = findColumn(headers, ['vendor', 'supplier', 'dostawca']);
     const categoryColumn = findColumn(headers, ['category', 'type', 'kategoria']);
     const amountColumn = findColumn(headers, ['amount', 'cost', 'price', 'kwota']);
@@ -121,15 +120,28 @@ export const POST: APIRoute = async (context) => {
 
     // Insert in batches of 1000
     const batchSize = 1000;
+    let costsInserted = 0;
+    let costsError: string | null = null;
+
+    console.log('DEBUG: Processing costs', { costs_length: costs.length, first_cost: costs[0] });
+
     for (let i = 0; i < costs.length; i += batchSize) {
       const batch = costs.slice(i, i + batchSize);
-      const { error: costError } = await supabase
+      console.log('DEBUG: Batch insert', { batch_size: batch.length, batch_index: i });
+      
+      const { error: costError, data: costData, status, statusText } = await supabase
         .from('costs')
-        .insert(batch);
+        .insert(batch)
+        .select();
+
+      console.log('DEBUG: Batch result', { costError, status, statusText, inserted_count: costData?.length });
 
       if (costError) {
         console.error('Cost insert error:', costError);
+        costsError = costError.message;
         // Continue with next batch - partial success is acceptable
+      } else {
+        costsInserted += batch.length;
       }
     }
 
@@ -138,6 +150,10 @@ export const POST: APIRoute = async (context) => {
       JSON.stringify({
         success: true,
         upload_id: upload.id,
+        costs_count: costs.length,
+        costs_inserted: costsInserted,
+        costs_error: costsError,
+        costs_array_sample: costs.slice(0, 1),
         preview: {
           headers,
           rows: preview,

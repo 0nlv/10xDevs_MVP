@@ -1,0 +1,14 @@
+Vendor,Category,Amount,Date,Client
+AWS TechCorp,Cloud Infrastructure,40000,2026-01-05,TechCorp Premium
+Office Rent TechCorp,Facilities,20000,2026-01-22,TechCorp Premium
+Senior Dev TechCorp,Labor,45000,2026-02-01,TechCorp Premium
+Insurance TechCorp,Insurance,10000,2026-01-25,TechCorp Premium
+JetBrains WebStudio,Development Tools,12000,2026-01-12,WebStudio Agency
+GitHub WebStudio,Version Control,8000,2026-01-15,WebStudio Agency
+Junior Dev WebStudio,Labor,35000,2026-02-05,WebStudio Agency
+Slack WebStudio,Communication,5000,2026-01-18,WebStudio Agency
+Figma WebStudio,Design Tools,4000,2026-01-20,WebStudio Agency
+Design Services StartUp,Labor,8000,2026-02-10,StartUp Accelerator
+Cloud Services StartUp,Cloud Infrastructure,4000,2026-01-05,StartUp Accelerator
+LocalBiz Support,Labor,2000,2026-02-10,LocalBiz Consulting
+Digital Ocean Misc,Server Hosting,1000,2026-01-08,LocalBiz Consulting
